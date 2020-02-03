@@ -7,7 +7,7 @@ const Persons = ({ persons, filter, handleRemove }) => {
   return (
     <>
       {persons.map(person => (
-        <Person key={person.name} person={person} handleRemove={handleRemove} />
+        <Person key={person.id} person={person} handleRemove={handleRemove} />
       ))}
     </>
   )
