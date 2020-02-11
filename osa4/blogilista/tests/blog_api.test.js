@@ -80,6 +80,42 @@ describe('POST', () => {
   })
 })
 
+describe('DELETE', () => {
+  test('blog can be deleted by id', async () => {
+    const blogs = await helper.blogsInDb()
+    const blogToBeDeleted = blogs[2]
+
+    await api.delete(`/api/blogs/${blogToBeDeleted.id}`).expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const titles = blogsAtEnd.map(blog => blog.title)
+
+    expect(blogsAtEnd.length).toBe(blogs.length - 1)
+    expect(titles).not.toContain(blogToBeDeleted.title)
+  })
+})
+
+describe('PUT', () => {
+  test('blog can be updated by id', async () => {
+    const blogs = await helper.blogsInDb()
+    const blogToBeModified = blogs[1]
+    const modifiedBlog = { blogToBeModified, title: 'Modified' }
+
+    const result = await api
+      .put(`/api/blogs/${blogToBeModified.id}`)
+      .send(modifiedBlog)
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const titles = blogsAtEnd.map(blog => blog.title)
+
+    expect(result.body.title).toBe('Modified')
+    expect(blogsAtEnd.length).toBe(blogs.length)
+    expect(titles).toContain(modifiedBlog.title)
+    expect(titles).not.toContain(blogToBeModified.title)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
