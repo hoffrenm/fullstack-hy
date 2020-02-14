@@ -1,10 +1,2 @@
-POST http://localhost:3003/api/blogs
-Content-Type: application/json
+DELETE http://localhost:3003/api/blogs/5e468f07db4d59144efb9062
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjVlNDY4ZWEyZGI0ZDU5MTQ0ZWZiOTA2MSIsImlhdCI6MTU4MTY4MjM2Mn0.e9o0s_ZcqIW8fAThv9whwdTbafTwQvpUlGY0vrwdqAk
-
-{
-    "author": "Tom Test",
-    "title": "Testing apis subpart 9",
-    "url": "haa",
-    "likes": 789
-}
