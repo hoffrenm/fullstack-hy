@@ -12,20 +12,36 @@ const revokeToken = () => {
   token = null
 }
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
+const getAll = async () => {
+  const response = await axios.get(baseUrl)
 
-  return request.then(response => response.data)
+  return response.data
 }
 
 const create = async blog => {
   const config = {
     headers: { Authorization: token }
   }
-  
+
   const response = await axios.post(baseUrl, blog, config)
 
   return response.data
 }
 
-export default { getAll, create, setToken, revokeToken }
+const update = async (id, blog) => {
+  const response = await axios.put(`${baseUrl}/${id}`, blog)
+
+  return response.data
+}
+
+const remove = async id => {
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+
+  return response.data
+}
+
+export default { getAll, create, update, remove, setToken, revokeToken }
