@@ -30,7 +30,6 @@ const App = () => {
     }
   }, [])
 
-  // Calling ref in async causes it to be null
   const addBlog = async blogObject => {
     try {
       const createdBlog = await blogService.create(blogObject)
@@ -43,22 +42,6 @@ const App = () => {
       handleNotification('error adding a blog, check fields')
     }
   }
-
-  // const addBlog = blogObject => {
-  //   blogService
-  //     .create(blogObject)
-  //     .then(createdBlog => {
-  //       blogFormRef.current.toggleVisibility()
-  //       setBlogs(blogs.concat(createdBlog))
-  //       handleNotification(
-  //         `A blog ${createdBlog.title} by ${createdBlog.author} has been added`
-  //       )
-  //     })
-  //     .catch(exception => {
-  //       console.log(exception)
-  //       handleNotification('error adding a blog, check fields')
-  //     })
-  // }
 
   const likeBlog = async blogObject => {
     try {
