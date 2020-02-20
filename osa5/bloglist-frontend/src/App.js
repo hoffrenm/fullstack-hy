@@ -103,17 +103,21 @@ const App = () => {
   )
 
   const blogList = () => {
-    return blogs
-      .sort((a, b) => b.likes > a.likes)
-      .map(blog => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleLike={likeBlog}
-          handleDelete={deleteBlog}
-          showDelete={user.username === blog.user.username}
-        />
-      ))
+    return (
+      <div id="bloglist">
+        {blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map(blog => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLike={likeBlog}
+              handleDelete={deleteBlog}
+              showDelete={user.username === blog.user.username}
+            />
+          ))}
+      </div>
+    )
   }
 
   return (
