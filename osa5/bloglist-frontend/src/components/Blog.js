@@ -43,18 +43,22 @@ const Blog = ({ blog, handleLike, handleDelete, showDelete }) => {
 
   if (!visible) {
     return (
-      <div style={baseStyle}>
+      <div className="blog" style={baseStyle}>
         {blog.title} {blog.author}{' '}
-        <button onClick={() => toggleVisibility()}>view</button>
+        <button className="toggleDetails" onClick={() => toggleVisibility()}>
+          view
+        </button>
       </div>
     )
   }
 
   return (
-    <div style={baseStyle}>
+    <div className="blog" style={baseStyle}>
       {blog.title} {blog.author}{' '}
-      <button onClick={() => toggleVisibility()}>hide</button>
-      <div style={showAdditionalInformation}>
+      <button className="toggleDetails" onClick={() => toggleVisibility()}>
+        hide
+      </button>
+      <div style={showAdditionalInformation} className="details">
         <a href={blog.url}>{blog.url}</a>
         <br />
         {blog.likes} likes <button onClick={addLike}>Like</button>
