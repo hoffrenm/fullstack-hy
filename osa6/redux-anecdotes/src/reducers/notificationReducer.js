@@ -1,17 +1,20 @@
 const initialState = null
 
+var timeoutId
 
 export const setNotification = (message, time) => {
   return async dispatch => {
     dispatch(setMessage(message))
 
-    setTimeout(() => {
+    timeoutId = window.setTimeout(() => {
       dispatch(resetNotification())
     }, time * 1000)
   }
 }
 
 const setMessage = message => {
+  window.clearTimeout(timeoutId)
+
   return {
     type: 'SET_NOTIFICATION',
     data: { message }
