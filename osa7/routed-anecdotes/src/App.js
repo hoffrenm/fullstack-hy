@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom'
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+  useHistory,
+  Redirect
+} from 'react-router-dom'
 import Anecdote from './components/Anecdote'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
@@ -65,7 +71,7 @@ const App = () => {
       {notification}
       <Switch>
         <Route path="/anecdotes/:id">
-          <Anecdote anecdote={anecdote} />
+          {anecdote ? <Anecdote anecdote={anecdote} /> : <Redirect to="/" />}
         </Route>
         <Route path="/create">
           <AnecdoteForm addNew={addNew} />
