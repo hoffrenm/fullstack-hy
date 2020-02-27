@@ -1,0 +1,33 @@
+{
+  "notes": [
+    {
+      "content": "Test note",
+      "id": 1
+    },
+    {
+      "content": "Test note 2",
+      "id": 2
+    },
+    {
+      "content": "ASDDdsdsaa",
+      "id": 3
+    }
+  ],
+  "persons": [
+    {
+      "name": "Random person",
+      "number": "123",
+      "id": 1
+    },
+    {
+      "name": "Another one",
+      "number": "737373",
+      "id": 2
+    },
+    {
+      "name": "AAAAAAAAAAA",
+      "number": "11123",
+      "id": 3
+    }
+  ]
+}
