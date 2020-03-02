@@ -1,26 +1,44 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Blog from './components/Blog'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import Loginform from './components/Loginform'
+import Blog from './components/Blog'
 import BlogForm from './components/Blogform'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import BlogList from './components/BlogList'
+import User from './components/User'
+import Users from './components/Users'
 import { initializeBlogs } from './reducers/blogReducer'
 import { checkLoggedUser, login, logout } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
+  const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
-  const dispatch = useDispatch()
-
   const blogFormRef = React.createRef()
+
+  const matchUser = useRouteMatch('/users/:id')
+  const matchingUser = matchUser
+    ? users.find(user => user.id === matchUser.params.id)
+    : null
+
+  const matchBlog = useRouteMatch('/blogs/:id')
+  const matchingBlog = matchBlog
+    ? blogs.find(blog => blog.id === matchBlog.params.id)
+    : null
 
   useEffect(() => {
     dispatch(initializeBlogs())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(initializeUsers())
   }, [dispatch])
 
   useEffect(() => {
@@ -49,22 +67,6 @@ const App = () => {
     </Togglable>
   )
 
-  const blogList = () => {
-    return (
-      <div id="bloglist">
-        {blogs
-          .sort((a, b) => b.likes - a.likes)
-          .map(blog => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              showDelete={user.username === blog.user.username}
-            />
-          ))}
-      </div>
-    )
-  }
-
   return (
     <>
       <Notification />
@@ -85,8 +87,21 @@ const App = () => {
             Logged in as {user.name}{' '}
             <button onClick={handleLogout}>Logout</button>
           </p>
-          {blogForm()}
-          {blogList()}
+          <Switch>
+            <Route path="/users/:id">
+              <User user={matchingUser} />
+            </Route>
+            <Route path="/blogs/:id">
+              <Blog blog={matchingBlog} />
+            </Route>
+            <Route path="/users">
+              <Users />
+            </Route>
+            <Route path="/">
+              {blogForm()}
+              <BlogList />
+            </Route>
+          </Switch>
         </div>
       )}
     </>
