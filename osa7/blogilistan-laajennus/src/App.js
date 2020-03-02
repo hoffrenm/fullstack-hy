@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import Blog from './components/Blog'
 import Loginform from './components/Loginform'
 import BlogForm from './components/Blogform'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
+import { checkLoggedUser, login, logout } from './reducers/userReducer'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
 
-  const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -26,14 +24,8 @@ const App = () => {
   }, [dispatch])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
+    dispatch(checkLoggedUser())
+  }, [dispatch])
 
   const toggleVisibility = () => {
     blogFormRef.current.toggleVisibility()
@@ -41,26 +33,14 @@ const App = () => {
 
   const handleLogout = event => {
     event.preventDefault()
-
-    window.localStorage.removeItem('loggedBlogAppUser')
-    blogService.revokeToken()
-    setUser(null)
+    dispatch(logout())
   }
 
   const handleLogin = async event => {
     event.preventDefault()
-
-    try {
-      const user = await loginService.login({ username, password })
-
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-      setUser(user)
-      setUsername('')
-      setPassword('')
-      blogService.setToken(user.token)
-    } catch (exception) {
-      dispatch(setNotification(exception.response.data.error, 5))
-    }
+    dispatch(login({ username, password }))
+    setUsername('')
+    setPassword('')
   }
 
   const blogForm = () => (
