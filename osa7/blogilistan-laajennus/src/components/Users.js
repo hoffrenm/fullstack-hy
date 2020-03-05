@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import userService from '../services/users'
+import {
+  Paper,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell
+} from '@material-ui/core'
 
 const Users = () => {
   const [users, setUsers] = useState([])
@@ -10,32 +18,30 @@ const Users = () => {
   }, [])
 
   const userStats = () => {
-    if (!users) {
-      return null
-    }
-
     return users.map(user => (
-      <tr key={user.id}>
-        <td>
+      <TableRow key={user.id}>
+        <TableCell>
           <Link to={`/users/${user.id}`}>{user.name}</Link>
-        </td>
-        <td>{user.blogs.length}</td>
-      </tr>
+        </TableCell>
+        <TableCell>{user.blogs.length}</TableCell>
+      </TableRow>
     ))
   }
 
   return (
     <div>
       <h2>Users</h2>
-      <table>
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <th>Blogs</th>
-          </tr>
-          {userStats()}
-        </tbody>
-      </table>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Blogs</TableCell>
+            </TableRow>
+            {userStats()}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

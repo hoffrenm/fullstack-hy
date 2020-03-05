@@ -1,27 +1,34 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import {
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper
+} from '@material-ui/core'
 
 const BlogList = () => {
   const blogs = useSelector(state => state.blogs)
 
-  const baseStyle = {
-    padding: '5px 0px 5px 10px',
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   return (
-    <div id="bloglist">
-      {blogs
-        .sort((a, b) => b.likes - a.likes)
-        .map(blog => (
-          <div style={baseStyle} key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-          </div>
-        ))}
-    </div>
+    <TableContainer id="bloglist" component={Paper}>
+      <Table>
+        <TableBody>
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map(blog => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
 

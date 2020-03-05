@@ -12,6 +12,23 @@ export const initializeBlogs = () => {
   }
 }
 
+export const addComment = (blog, content) => {
+  return async dispatch => {
+    try {
+      const commentedBlog = await blogService.addComment(blog.id, content)
+
+      dispatch({
+        type: 'ADD_COMMENT',
+        data: { commentedBlog }
+      })
+
+      dispatch(setNotification('Comment saved successfully!', 5))
+    } catch (exception) {
+      dispatch(setNotification('Something went wrong', 5))
+    }
+  }
+}
+
 export const createBlog = blogObject => {
   return async dispatch => {
     try {
@@ -22,7 +39,10 @@ export const createBlog = blogObject => {
       })
 
       dispatch(
-        setNotification(`A blog ${createdBlog.title} by ${createdBlog.author} has been added`, 5)
+        setNotification(
+          `A blog ${createdBlog.title} by ${createdBlog.author} has been added`,
+          5
+        )
       )
     } catch (exception) {
       dispatch(setNotification('Error adding a blog', 5))
@@ -61,6 +81,9 @@ const reducer = (state = [], action) => {
     case 'ADD_LIKE':
       const liked = action.data.likedBlog
       return state.map(blog => (blog.id !== liked.id ? blog : liked))
+    case 'ADD_COMMENT':
+      const commented = action.data.commentedBlog
+      return state.map(blog => (blog.id !== commented.id ? blog : commented))
     case 'REMOVE_BLOG':
       return state.filter(blog => blog.id !== action.data.id)
     default:

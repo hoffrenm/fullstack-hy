@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 import Loginform from './components/Loginform'
 import Blog from './components/Blog'
 import BlogForm from './components/Blogform'
@@ -12,6 +12,13 @@ import Users from './components/Users'
 import { initializeBlogs } from './reducers/blogReducer'
 import { checkLoggedUser, login, logout } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
+import {
+  Container,
+  AppBar,
+  Toolbar,
+  Button,
+  Typography
+} from '@material-ui/core'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
@@ -68,10 +75,19 @@ const App = () => {
   )
 
   return (
-    <>
-      <Notification />
+    <Container>
       {user === null ? (
         <div>
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="h5" color="inherit">
+                Login
+              </Typography>
+            </Toolbar>
+          </AppBar>
+
+          <Notification />
+
           <Loginform
             handleLogin={handleLogin}
             username={username}
@@ -82,11 +98,30 @@ const App = () => {
         </div>
       ) : (
         <div>
+          <AppBar position="static">
+            <Toolbar>
+              <Button color="inherit" component={Link} to="/">
+                Blogs
+              </Button>
+              <Button color="inherit" component={Link} to="/users">
+                Users
+              </Button>
+              <div style={{ flex: 1 }} />
+              <Typography>Logged in as {user.name} </Typography>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </Toolbar>
+          </AppBar>
+
+          <Notification />
+
           <h1>Blogs</h1>
-          <p>
-            Logged in as {user.name}{' '}
-            <button onClick={handleLogout}>Logout</button>
-          </p>
+
           <Switch>
             <Route path="/users/:id">
               <User user={matchingUser} />
@@ -104,7 +139,7 @@ const App = () => {
           </Switch>
         </div>
       )}
-    </>
+    </Container>
   )
 }
 

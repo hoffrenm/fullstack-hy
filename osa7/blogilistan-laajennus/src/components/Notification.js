@@ -1,16 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Alert } from '@material-ui/lab'
 
-const baseStyle = {
-  fontSize: 24,
-  textAlign: 'center',
-  background: 'lightgrey',
-  borderRadius: 10,
-  borderStyle: 'solid',
-  width: 600,
-  padding: 10,
-  marginBottom: 15
-}
 
 const Notification = () => {
   const message = useSelector(state => state.notification)
@@ -19,7 +10,7 @@ const Notification = () => {
     return null
   }
 
-  return <div id='notification' style={baseStyle}>{message}</div>
+  return <Alert severity="info" id='notification'>{message}</Alert>
 }
 
 export default Notification

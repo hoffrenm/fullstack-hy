@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { TextField, Button, Grid } from '@material-ui/core'
 
 const Loginform = ({
   handleLogin,
@@ -9,32 +10,41 @@ const Loginform = ({
   handlePasswordChange
 }) => {
   return (
-    <>
-      <h2>Log in to application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          Username
-          <input
-            id='username'
-            type="text"
-            value={username}
-            onChange={handleUsernameChange}
-            name="Username"
-          />
-        </div>
-        <div>
-          Password
-          <input
-            id='password'
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            name="Password"
-          />
-        </div>
-        <button id='loginButton' type="submit">Login</button>
-      </form>
-    </>
+    <Grid container justify="center">
+      <Grid item>
+        <form onSubmit={handleLogin}>
+          <div>
+            <TextField
+              label="username"
+              id="username"
+              type="text"
+              value={username}
+              onChange={handleUsernameChange}
+              name="Username"
+            />
+          </div>
+          <div>
+            <TextField
+              label="password"
+              id="password"
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              name="Password"
+            />
+          </div>
+          <br />
+          <Button
+            color="primary"
+            variant="contained"
+            id="loginButton"
+            type="submit"
+          >
+            Login
+          </Button>
+        </form>
+      </Grid>
+    </Grid>
   )
 }
 
