@@ -5,13 +5,21 @@
   "main": "library-backend.js",
   "scripts": {
     "start": "node library-backend.js",
+    "dev": "nodemon library-backend.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Mika Hoffren",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.11.0",
+    "dotenv": "^8.2.0",
     "graphql": "^14.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.3",
+    "mongoose-unique-validator": "^2.0.3",
     "uuid": "^7.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }

@@ -22,7 +22,7 @@ const Authors = props => {
   const authors = result.data.allAuthors
 
   const updateBornYear = () => {
-    editAuthor({ variables: { name: selectedAuthor, setBornTo: bornYear } })
+    editAuthor({ variables: { name: selectedAuthor.value, setBornTo: bornYear } })
 
     setBornYear('')
     setSelectedAuthor('')
@@ -49,7 +49,10 @@ const Authors = props => {
       </table>
       <Select
         options={authors.map(a => ({ value: a.name, label: a.name }))}
-        onChange={e => setSelectedAuthor(e.value)}
+        onChange={event => {
+          setSelectedAuthor({ value: event.value, label: event.label })
+        }}
+        value={selectedAuthor}
       />
       Set born year to{' '}
       <input
