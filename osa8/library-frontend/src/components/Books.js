@@ -1,30 +1,56 @@
-import React from 'react'
-import { useQuery } from '@apollo/client'
-import { ALL_BOOKS } from '../queries'
+import React, { useState, useEffect } from 'react'
+import { useQuery, useLazyQuery } from '@apollo/client'
+import { ALL_BOOKS, ALL_GENRES } from '../queries'
 
 const Books = props => {
-  const result = useQuery(ALL_BOOKS)
+  const [filter, setFilter] = useState(null)
+
+  const [getBooks, { loading, data }] = useLazyQuery(ALL_BOOKS)
+  const genreResult = useQuery(ALL_GENRES)
+
+  useEffect(() => {
+    if (filter) {
+      getBooks({ variables: { genre: filter } })
+    } else {
+      getBooks()
+    }
+  }, [filter, getBooks])
 
   if (!props.show) {
     return null
   }
 
-  if (result.loading) {
+  if (loading || genreResult.loading) {
     return <div>Loading...</div>
   }
 
-  const books = result.data.allBooks
+  const books = data.allBooks
+  const genres = genreResult.data.allGenres
+
+  const genreButtons = () => {
+    return (
+      <div>
+        <button onClick={() => setFilter(null)}>All genres</button>
+        {genres.map(genre => (
+          <button key={genre} onClick={() => setFilter(genre)}>
+            {genre}
+          </button>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div>
-      <h2>books</h2>
-
+      <h2>Books</h2>
+      Now showing <b>{filter === null ? 'All genres' : filter}</b>
+      <br />
       <table>
         <tbody>
           <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Published</th>
           </tr>
           {books.map(a => (
             <tr key={a.title}>
@@ -35,6 +61,8 @@ const Books = props => {
           ))}
         </tbody>
       </table>
+      <h4>Filter books by genre</h4>
+      {genreButtons()}
     </div>
   )
 }

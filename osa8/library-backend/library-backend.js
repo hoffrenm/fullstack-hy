@@ -11,6 +11,7 @@ const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
+const _ = require('lodash')
 
 mongoose.set('useFindAndModify', false)
 
@@ -26,8 +27,8 @@ const typeDefs = gql`
   type Author {
     name: String!
     born: Int
-    id: ID!
     bookCount: Int!
+    id: ID!
   }
 
   type Book {
@@ -54,6 +55,7 @@ const typeDefs = gql`
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
     me: User
+    allGenres: [String!]!
   }
 
   type Mutation {
@@ -94,9 +96,10 @@ const resolvers = {
       return Author.find({})
     },
     me: (root, args, context) => {
-      console.log(context)
-
       return context.currentUser
+    },
+    allGenres: () => {
+      return Book.distinct('genres')
     }
   },
   Author: {
@@ -118,8 +121,10 @@ const resolvers = {
           await author.save()
         }
 
-        const book = new Book({ ...args, author: { ...author } })
-        return book.save()
+        const book = new Book({ ...args, author: author._id })
+
+        const createdBook = await book.save()
+        return await Book.findById(createdBook._id).populate('author')
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args })
       }

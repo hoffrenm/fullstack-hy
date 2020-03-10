@@ -22,21 +22,49 @@ const Authors = props => {
   const authors = result.data.allAuthors
 
   const updateBornYear = () => {
-    editAuthor({ variables: { name: selectedAuthor.value, setBornTo: bornYear } })
+    editAuthor({
+      variables: { name: selectedAuthor.value, setBornTo: bornYear }
+    })
 
     setBornYear('')
     setSelectedAuthor('')
   }
 
+  const editForm = () => {
+    if (!props.showEdit) {
+      return null
+    }
+
+    return (
+      <>
+        <h3>Edit author's birthyear</h3>
+        <Select
+          options={authors.map(a => ({ value: a.name, label: a.name }))}
+          onChange={event => {
+            setSelectedAuthor({ value: event.value, label: event.label })
+          }}
+          value={selectedAuthor}
+        />
+        Set born year to{' '}
+        <input
+          type="number"
+          onChange={({ target }) => setBornYear(parseInt(target.value))}
+          value={bornYear}
+        />
+        <button onClick={updateBornYear}>Update author</button>
+      </>
+    )
+  }
+
   return (
     <div>
-      <h2>authors</h2>
+      <h2>Authors</h2>
       <table>
         <tbody>
           <tr>
-            <th></th>
-            <th>born</th>
-            <th>books</th>
+            <th>Name</th>
+            <th>Born</th>
+            <th>Books</th>
           </tr>
           {authors.map(a => (
             <tr key={a.name}>
@@ -47,20 +75,7 @@ const Authors = props => {
           ))}
         </tbody>
       </table>
-      <Select
-        options={authors.map(a => ({ value: a.name, label: a.name }))}
-        onChange={event => {
-          setSelectedAuthor({ value: event.value, label: event.label })
-        }}
-        value={selectedAuthor}
-      />
-      Set born year to{' '}
-      <input
-        type="number"
-        onChange={({ target }) => setBornYear(parseInt(target.value))}
-        value={bornYear}
-      />
-      <button onClick={updateBornYear}>Update author</button>
+      { editForm() }
     </div>
   )
 }
