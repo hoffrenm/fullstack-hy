@@ -26,7 +26,8 @@ const NewBook = props => {
       variables: { title, author, published, genres },
       refetchQueries: [
         { query: ALL_BOOKS, variables: { genre: genres[0] } },
-        { query: ALL_GENRES }
+        { query: ALL_GENRES },
+        { query: ALL_AUTHORS }
       ]
     })
 

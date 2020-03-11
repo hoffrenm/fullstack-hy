@@ -17,6 +17,9 @@ const AUTHOR_DETAILS = gql`
     name
     born
     bookCount
+    books {
+      id
+    }
     id
   }
 `
@@ -43,6 +46,15 @@ export const CREATE_BOOK = gql`
       published: $published
       genres: $genres
     ) {
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
+`
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
       ...BookDetails
     }
   }

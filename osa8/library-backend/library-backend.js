@@ -4,7 +4,8 @@ const {
   ApolloServer,
   gql,
   UserInputError,
-  AuthenticationError
+  AuthenticationError,
+  PubSub
 } = require('apollo-server')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
@@ -13,7 +14,10 @@ const Author = require('./models/author')
 const User = require('./models/user')
 const _ = require('lodash')
 
+const pubsub = new PubSub()
+
 mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -27,6 +31,7 @@ const typeDefs = gql`
   type Author {
     name: String!
     born: Int
+    books: [Book!]!
     bookCount: Int!
     id: ID!
   }
@@ -69,6 +74,10 @@ const typeDefs = gql`
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
 const resolvers = {
@@ -92,8 +101,8 @@ const resolvers = {
 
       return Book.find(query).populate('author', { name: 1, id: 1, born: 1 })
     },
-    allAuthors: () => {
-      return Author.find({})
+    allAuthors: async () => {
+      return Author.find({}).populate('books', { id: 1 })
     },
     me: (root, args, context) => {
       return context.currentUser
@@ -104,7 +113,7 @@ const resolvers = {
   },
   Author: {
     bookCount: root => {
-      return Book.collection.countDocuments({ author: root._id })
+      return root.books.length
     }
   },
   Mutation: {
@@ -123,8 +132,14 @@ const resolvers = {
 
         const book = new Book({ ...args, author: author._id })
 
-        const createdBook = await book.save()
-        return await Book.findById(createdBook._id).populate('author')
+        await book.save()
+        author.books = author.books.concat(book._id)
+        await author.save()
+        await Book.populate(book, 'author')
+
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
+        return book
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args })
       }
@@ -143,6 +158,7 @@ const resolvers = {
       author.born = args.setBornTo
 
       await author.save()
+      await Author.populate(author, 'books')
       return author
     },
     createUser: async (root, args) => {
@@ -167,6 +183,11 @@ const resolvers = {
 
       return { value: jwt.sign(userForToken, process.env.SECRET) }
     }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+    }
   }
 }
 
@@ -186,6 +207,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
