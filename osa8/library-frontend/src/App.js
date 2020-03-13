@@ -63,15 +63,19 @@ const App = () => {
 
       <Books show={page === 'books'} />
 
-      <NewBook updateCacheWith={updateCacheWith} show={page === 'add'} />
+      {token !== null ? (
+        <>
+          <NewBook updateCacheWith={updateCacheWith} show={page === 'add'} />
 
-      <RecommendedBooks show={page === 'recommended'} />
-
-      <LoginForm
-        setToken={setToken}
-        setPage={setPage}
-        show={page === 'login'}
-      />
+          <RecommendedBooks show={page === 'recommended'} />
+        </>
+      ) : (
+        <LoginForm
+          setToken={setToken}
+          setPage={setPage}
+          show={page === 'login'}
+        />
+      )}
     </div>
   )
 }

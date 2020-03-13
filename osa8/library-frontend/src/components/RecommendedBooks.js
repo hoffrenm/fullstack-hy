@@ -4,15 +4,15 @@ import { ALL_BOOKS, USER_INFO } from '../queries'
 
 const RecommendedBooks = props => {
   const userInfo = useQuery(USER_INFO)
-  const [recommendedBooks, { loading, data }] = useLazyQuery(ALL_BOOKS)
+  const [books, { loading, data }] = useLazyQuery(ALL_BOOKS)
 
   useEffect(() => {
     if (!userInfo.loading && userInfo.data) {
-      recommendedBooks({ variables: { genre: userInfo.data.me.favoriteGenre } })
+      books({ variables: { genre: userInfo.data.me.favoriteGenre } })
     }
-  }, [userInfo, recommendedBooks])
+  }, [userInfo.data, userInfo.loading, books])
 
-  if (!props.show) {
+  if (!props.show || !userInfo || !userInfo.data) {
     return null
   }
 

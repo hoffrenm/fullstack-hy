@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/client'
+import { useMutation, useLazyQuery } from '@apollo/client'
 import { LOGIN, USER_INFO } from '../queries'
 
 const LoginForm = ({ show, setToken, setPage }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const [login, result] = useMutation(LOGIN, { refetchQueries: { USER_INFO }})
+  const [login, result] = useMutation(LOGIN)
+  const [updateUserInfo] = useLazyQuery(USER_INFO)
 
-  const handleLogin = event => {
+  const handleLogin = async event => {
     event.preventDefault()
-    login({ variables: { username, password } })
+    await login({ variables: { username, password } })
+    updateUserInfo()
   }
 
   useEffect(() => {
