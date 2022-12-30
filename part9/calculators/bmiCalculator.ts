@@ -5,7 +5,7 @@ interface BmiValues {
 
 const parseArguments = (args: Array<string>): BmiValues => {
     if (args.length < 4) throw new Error('Not enough arguments');
-    if (args.length < 4) throw new Error('Too many arguments');
+    if (args.length > 4) throw new Error('Too many arguments');
 
     if (Number.isNaN(Number(args[2])) || Number.isNaN(Number(args[3]))) {
         throw new Error('Provided values were not numbers');

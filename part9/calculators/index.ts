@@ -9,6 +9,11 @@ app.get('/hello', (_req, res) => {
     res.send('Hello Full Stack!');
 });
 
+export interface Parameters {
+    target: number,
+    daily_exercises: number[]
+}
+
 app.get('/bmi', (req, res) => {
     const { height, weight } = req.query;
 
@@ -22,25 +27,19 @@ app.get('/bmi', (req, res) => {
 });
 
 app.post('/exercises', (req, res) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { target, daily_exercises } = req.body;
+    const { target, daily_exercises } = req.body as Parameters;
 
-    console.log(target, daily_exercises);
-    
     if (!target || !daily_exercises) {
         res.status(400).json({ error: "parameters missing" });
     }
 
-    // eslint-disable-next-line
-    const nanExists = daily_exercises.some((a: any) => isNaN(Number(a)));
+    const nanExists = daily_exercises.some(a => isNaN(a));
 
     if (isNaN(Number(target)) || nanExists) {
         res.status(400).json({ error: "malformatted parameters" });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     res.status(200).json(calculateExercises(target, daily_exercises));
-
 });
 
 const PORT = 3002;
