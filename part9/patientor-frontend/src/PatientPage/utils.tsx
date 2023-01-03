@@ -1,4 +1,4 @@
-import { useStateValue } from "../../state";
+import { useStateValue } from "../state";
 
 export const diagnosisCodes = (codes: string[]) => {
   const [{ diagnoses }] = useStateValue();

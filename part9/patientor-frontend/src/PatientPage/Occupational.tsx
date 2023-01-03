@@ -1,4 +1,4 @@
-import { OccupationalHealthcareEntry } from "../../types";
+import { OccupationalHealthcareEntry } from "../types";
 import { Grid, Box } from "@material-ui/core";
 import WorkIcon from '@mui/icons-material/Work';
 import { diagnosisCodes } from "./utils";
@@ -8,7 +8,6 @@ const Occuppational = ({ entry }: { entry: OccupationalHealthcareEntry; }) => {
   return (
     <Grid item xs={12} >
       <Box border={2}
-        borderColor="primary.main"
         borderRadius={12}
         padding={2}
         paddingBottom={1}

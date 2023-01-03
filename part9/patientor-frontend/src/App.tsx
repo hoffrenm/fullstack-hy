@@ -9,7 +9,7 @@ import { Diagnosis, Patient } from "./types";
 
 import PatientListPage from "./PatientListPage";
 import { Typography } from "@material-ui/core";
-import PatientPage from "./components/PatientPage/PatientPage";
+import PatientPage from "./PatientPage/PatientPage";
 
 const App = () => {
   const [, dispatch] = useStateValue();
